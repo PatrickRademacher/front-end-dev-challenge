@@ -9,7 +9,7 @@ import {
   LineElement,
 } from 'chart.js';
 
-class ChallengeChart extends LitElement {
+export class ChallengeChart extends LitElement {
   static get styles() {
     return css``;
   }

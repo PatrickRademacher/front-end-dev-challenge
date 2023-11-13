@@ -28,7 +28,8 @@
     "test:watch": "wtr --watch",
     "test:prod": "MODE=prod wtr",
     "test:prod:watch": "MODE=prod wtr --watch",
-    "checksize": "rollup -c ; cat my-element.bundled.js | gzip -9 | wc -c ; rm my-element.bundled.js"
+    "checksize": "rollup -c ; cat my-element.bundled.js | gzip -9 | wc -c ; rm my-element.bundled.js",
+    "unit-test": "web-test-runner test/**/*.test.js --node-resolve"
   },
   "keywords": [
     "web-components",
@@ -39,7 +40,9 @@
   "author": "Google LLC",
   "license": "BSD-3-Clause",
   "dependencies": {
-    "lit": "^2.0.0"
+    "bootstrap": "^5.3.2",
+    "lit": "^2.0.0",
+    "mdbootstrap": "^4.20.0"
   },
   "devDependencies": {
     "@11ty/eleventy": "^0.12.1",
@@ -54,7 +57,7 @@
     "@web/dev-server": "^0.1.22",
     "@web/dev-server-legacy": "^0.1.4",
     "@web/dev-server-rollup": "^0.3.9",
-    "@web/test-runner": "^0.13.16",
+    "@web/test-runner": "^0.13.31",
     "@web/test-runner-mocha": "^0.7.4",
     "@web/test-runner-playwright": "^0.8.4",
     "@webcomponents/webcomponentsjs": "^2.6.0",

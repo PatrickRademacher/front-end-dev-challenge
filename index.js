@@ -1,8 +1,7 @@
 import './challenge-table';
+import './challenge-chart/dist/challenge-chart';
+
 
 const challengeTable = document.querySelector('challenge-table')
-challengeTable.data = [
-  [1, 1],
-  [2, 2],
-];
-challengeTable.tableName = 'example table component'
+const challengeChart = document.querySelector('challenge-chart')
+

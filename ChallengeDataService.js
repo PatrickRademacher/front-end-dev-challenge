@@ -78,7 +78,7 @@ export class ChallengeDataService {
     const xColumn = new ChallengeDataColumn('x', xValues);
     const yColumn = new ChallengeDataColumn('y', yValues);
 
-    // simulte this taking time
+    // simulate this taking time
     await delay(Math.random() * 500);
 
     return new ChallengeDataSet(`DataSet-${which}`, xColumn, yColumn);
