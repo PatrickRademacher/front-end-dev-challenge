@@ -320,10 +320,9 @@ export class ChallengeTable extends LitElement {
       this.name = success.name;
       this.columnNames = [success.xColumn._name, success.yColumn._name];
       this.data = success.xColumn._values.map((x, i) => ({x: x, y: success.yColumn._values[i]})); 
-    }).catch(error => console.log(error));
-    
-
+    }).catch(error => console.log('ERROR: ' + error));
   } 
+  
 
   getDynamicData(){
     this.active = !this.active;
@@ -362,7 +361,9 @@ export class ChallengeTable extends LitElement {
           ${map(
             this.dataSets,
             (item, i) => html`
-            <button @click=${() => this.setData(item)}>${this.dataSetNames[i]}</button>
+            <button @click=${() => this.setData(item)} id=${item} class=${
+              this.active ? 'disabled' : ''
+            }>${this.dataSetNames[i]}</button>
             `)}
           <button @click=${() => this.getDynamicData()} class="dynamic-data-button">${this.dynamicButton}</button>          
         </div>

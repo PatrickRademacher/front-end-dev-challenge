@@ -21,6 +21,15 @@ describe('ChallengeTable', () => {
     
         expect(ct.active).to.equal(true);
       });
+
+      it('sets changes the name when dynamic data button is clicked', async () => {
+        const ct = await fixture(html`
+          <challenge-table></challenge-table>
+        `);
+        ct.shadowRoot.querySelector('.dynamic-data-button').click();
+        expect(ct.name).to.equal( "DataSet-dynamic");
+      });
+      
       
       });
 
