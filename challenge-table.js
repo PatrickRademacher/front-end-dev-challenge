@@ -33,7 +33,8 @@ export class ChallengeTable extends LitElement {
         border-spacing: 0; 
         border: 2px solid #fdb730; 
         } 
-
+    
+      /* To display the block as level element */ 
       table.scrolldown tbody, table.scrolldown thead { 
           display: block; 
       }  
@@ -44,8 +45,14 @@ export class ChallengeTable extends LitElement {
       } 
     
       table.scrolldown tbody { 
-          height: 50px; 
-          overflow-y: auto;
+            
+          /* Set the height of table body */ 
+          height: 50px;  
+            
+          /* Set vertical scroll */ 
+          overflow-y: auto; 
+            
+          /* Hide the horizontal scroll */ 
           overflow-x: hidden;  
       } 
     
@@ -170,9 +177,8 @@ export class ChallengeTable extends LitElement {
 
       .disabled {
         pointer-events: none;
-        opacity: 0.5; 
+        opacity: 0.5; /* You can adjust the opacity or add other styles for the disabled look */
       }
-      
       challenge-chart{
         width: 95%;
         padding: 10px;
@@ -295,22 +301,26 @@ export class ChallengeTable extends LitElement {
   constructor(){
     super();
     this.name = 'Default';
-    this.data = [{x: 0, y: 0}, {x:1, y: 1}];
+    this.data = [];
     this.columnNames = ['x', 'y'];
     this.challengeDataService = new ChallengeDataService;
     this.active = false; // boolean to determine if dynamic data is streaming
     this.dynamicButton = "Get Dynamic Data";
     this.samplesPerSecond = 1; // allows user to set rate for dynamic data
     this.samplesLoaded = 1; // allows user to set how many points are plotted at a time
+    this.dataSets = ["small", "medium", "large"];
+    this.dataSetNames = ["Get Small Dataset", "Get Medium Dataset", "Get Large Dataset"];
   }
 
   async setData(dataset) {
     // gets promise returned from challengeDataService and sets class properties to results
-    const response = await this.challengeDataService.getDataSet(dataset).then(success => {
+    return await this.challengeDataService.getDataSet(dataset).then(success => {
       this.name = success.name;
       this.columnNames = [success.xColumn._name, success.yColumn._name];
       this.data = success.xColumn._values.map((x, i) => ({x: x, y: success.yColumn._values[i]})); 
     }).catch(error => console.log(error));
+    
+
   } 
 
   getDynamicData(){
@@ -347,9 +357,11 @@ export class ChallengeTable extends LitElement {
     <h1>${this.name}</h1>
       <div class="buttons-and-sliders">
         <div class="buttons">
-          <button @click=${() => (this.setData("small"))}>Get Small Dataset</button>
-          <button @click=${() => this.setData("medium")}>Get Medium Dataset</button>
-          <button @click=${() => this.setData("large")}>Get Large Dataset</button>
+          ${map(
+            this.dataSets,
+            (item, i) => html`
+            <button @click=${() => this.setData(item)}>${this.dataSetNames[i]}</button>
+            `)}
           <button @click=${() => this.getDynamicData()} class="dynamic-data-button">${this.dynamicButton}</button>          
         </div>
         <div class="slidecontainer">
