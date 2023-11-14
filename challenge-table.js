@@ -33,8 +33,7 @@ export class ChallengeTable extends LitElement {
         border-spacing: 0; 
         border: 2px solid #fdb730; 
         } 
-    
-      /* To display the block as level element */ 
+
       table.scrolldown tbody, table.scrolldown thead { 
           display: block; 
       }  
@@ -45,14 +44,8 @@ export class ChallengeTable extends LitElement {
       } 
     
       table.scrolldown tbody { 
-            
-          /* Set the height of table body */ 
-          height: 50px;  
-            
-          /* Set vertical scroll */ 
-          overflow-y: auto; 
-            
-          /* Hide the horizontal scroll */ 
+          height: 50px; 
+          overflow-y: auto;
           overflow-x: hidden;  
       } 
     
@@ -177,8 +170,9 @@ export class ChallengeTable extends LitElement {
 
       .disabled {
         pointer-events: none;
-        opacity: 0.5; /* You can adjust the opacity or add other styles for the disabled look */
+        opacity: 0.5; 
       }
+      
       challenge-chart{
         width: 95%;
         padding: 10px;
