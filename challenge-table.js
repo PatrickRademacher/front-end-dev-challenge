@@ -16,7 +16,6 @@ export class ChallengeTable extends LitElement {
         text-align: center;
         justify-content: center;
         color: #007377;
-        font-size: 45px;
         font-size: 3.6vh;
         height: 5vh;
       }
@@ -73,13 +72,14 @@ export class ChallengeTable extends LitElement {
         border: 1px solid;
       }
 
-      #buttons-and-sliders{
+      .buttons-and-sliders{
         border: 1px solid #fdb730; 
         display: flex; 
         align-items: center; 
         width: 100vw;
         background-color: #007377;
         height: 23vh;
+        min-height: 150px;
         justify-content: center;
       }
 
@@ -127,20 +127,21 @@ export class ChallengeTable extends LitElement {
         transform: translate(2px, 2px);
       }
 
-      #slidecontainer {
+      .slidecontainer {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         padding: 3px;
         width: 100%;
-        min-width: 100px;
-        max-width: 650px;
+        min-width: 10px;
+        max-width: 350px;
       }
     
       #slider {
         -webkit-appearance: none;
         width: 90%;
+        height: 20%;
         height: 15px;
         border-radius: 5px;
         background: #fdb730;
@@ -150,7 +151,6 @@ export class ChallengeTable extends LitElement {
         transition: opacity .2s;
         display: flex;
         justify-self: center;
-      
       }
       
       #slider:hover {
@@ -180,7 +180,7 @@ export class ChallengeTable extends LitElement {
         opacity: 0.5; /* You can adjust the opacity or add other styles for the disabled look */
       }
       challenge-chart{
-        width: 100%;
+        width: 95%;
         padding: 10px;
       }
 
@@ -188,14 +188,14 @@ export class ChallengeTable extends LitElement {
         box-sizing: border-box;
       } 
 
-      #table-and-graph{
+      .table-and-graph{
         display: flex; 
         flex-wrap: wrap;
-        height: 60vh;
+        height: 67vh;
         justify-content: space-between;
       }
     
-      #dot-graph {
+      .graph-container {
         width: 60%;
         justify-content: center;
         display: flex;
@@ -204,7 +204,7 @@ export class ChallengeTable extends LitElement {
         align-items: center;
       }
       
-      #table {
+      .table{
         width: 40%;
         padding: 4px;
         text-align: center;
@@ -216,11 +216,68 @@ export class ChallengeTable extends LitElement {
         min-width: 350px;
         background-color: white;
       }
-    
+
+      p{ 
+        font-size: 13px; 
+        color: #fdb730; 
+        border: 2px solid white; 
+        border-radius: 20px; 
+        padding: 7px; 
+        width: 80%; 
+        display: flex; 
+        justify-content: center
+      }
+
       @media only screen and (max-width: 1000px) {
-        /* For mobile phones: */
-        #dot-graph, #table{
+        .graph-container, .table{
           width: 100%;
+          min-width: 250px;
+        }
+      }
+
+      @media only screen and (max-width: 600px) {
+        .graph-container, .table{
+          height: 33.5vh;
+        }
+
+        .table {
+          font-size: 14px;
+        }
+
+        .buttons-and-sliders{
+          justify-content: space-between;
+        }
+
+        .buttons {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 1px;
+          min-width: 150px;
+          height: 95%;
+        }
+
+        button {
+          font-size: 10px;
+          padding: 2px 2px;
+          margin: 2px;
+          max-width: 120px;
+          height: 20%;
+        }
+
+        .slidecontainer {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-evenly;
+          padding: 1px;
+          width: 95%;
+          height: 95%;
+        }
+        p { 
+          font-size: 10px; 
+        }
+        challenge-chart {
+          width: 95vw;
         }
       }
   `;
@@ -230,11 +287,10 @@ export class ChallengeTable extends LitElement {
   
   static get properties() {
     return {
-      // Feel free to refactor, change type, name, etc
       name: { type: String },
       data: { type: Array },
       columnNames: { type: Array },
-      challengeDataService: {type: ChallengeDataService },
+      challengeDataService: { type: ChallengeDataService },
       dynamicButton: { type: String },
       active: { type: Boolean},
       samplesPerSecond: { type: Number },
@@ -244,31 +300,24 @@ export class ChallengeTable extends LitElement {
 
   constructor(){
     super();
-    this.name = '';
-    this.columnNames = [];
+    this.name = 'Default';
+    this.data = [{x: 0, y: 0}, {x:1, y: 1}];
+    this.columnNames = ['x', 'y'];
     this.challengeDataService = new ChallengeDataService;
-    this.getData("medium");
-    this.active = false;
+    this.active = false; // boolean to determine if dynamic data is streaming
     this.dynamicButton = "Get Dynamic Data";
-    this.samplesPerSecond = 1;
-    this.samplesLoaded = 1;
+    this.samplesPerSecond = 1; // allows user to set rate for dynamic data
+    this.samplesLoaded = 1; // allows user to set how many points are plotted at a time
   }
 
-  async getData(dataset) {
+  async setData(dataset) {
+    // gets promise returned from challengeDataService and sets class properties to results
     const response = await this.challengeDataService.getDataSet(dataset).then(success => {
-      const name = success.name;
-      const columnNames = [success.xColumn._name, success.yColumn._name];
-      const data = success.xColumn._values.map((x, i) => ({x: x, y: success.yColumn._values[i]}));
-      const result = [[name], data, columnNames];
-      return result
+      this.name = success.name;
+      this.columnNames = [success.xColumn._name, success.yColumn._name];
+      this.data = success.xColumn._values.map((x, i) => ({x: x, y: success.yColumn._values[i]})); 
     }).catch(error => console.log(error));
-    
-    this.name = response[0];
-    this.data = response[1]; 
-    this.columnNames = response[2];
-    const result = [this.name, this.data, this.columnNames];
-    return result;
-} 
+  } 
 
   getDynamicData(){
     this.active = !this.active;
@@ -278,8 +327,11 @@ export class ChallengeTable extends LitElement {
       this.dynamicButton = "Stop Dynamic Data";
       let dynamicData = [];
       this.challengeDataService.startStreaming(this.samplesPerSecond, (x,y) => {
-        dynamicData = dynamicData.concat([{x: x, y: y}])
+        //adds new data 
+        dynamicData = dynamicData.concat([{x: x, y: y}]) 
+        // sets data to be updated after how many samples loaded
         dynamicData.length % this.samplesLoaded === 0 ? this.data = dynamicData : null;
+        
       });
     }
     else{
@@ -298,17 +350,16 @@ export class ChallengeTable extends LitElement {
 
   render() {
     return html`
-  
     <h1>${this.name}</h1>
-      <div id="buttons-and-sliders">
+      <div class="buttons-and-sliders">
         <div class="buttons">
-          <button @click=${() => this.getData('small')} class="small-data">Get Small Dataset</button>
-          <button @click=${() => this.getData("medium")}>Get Medium Dataset</button>
-          <button @click=${() => this.getData("large")}>Get Large Dataset</button>
+          <button @click=${() => (this.setData("small"))}>Get Small Dataset</button>
+          <button @click=${() => this.setData("medium")}>Get Medium Dataset</button>
+          <button @click=${() => this.setData("large")}>Get Large Dataset</button>
           <button @click=${() => this.getDynamicData()} class="dynamic-data-button">${this.dynamicButton}</button>          
         </div>
-        <div id="slidecontainer">
-          <p style="font-size: 15px; color: #fdb730; border: 2px solid white; border-radius: 20px; padding: 7px; width: 120px; display: flex; justify-content: center">Samples Per Second: ${this.samplesPerSecond}</p>
+        <div class="slidecontainer">
+          <p>Samples Per Second: ${this.samplesPerSecond}</p>
           <input
             type="range"
             id="slider"
@@ -319,7 +370,7 @@ export class ChallengeTable extends LitElement {
             @input="${this.handleRateChange}"
           >
           </input>
-          <p style="font-size: 15px; color: #fdb730; border: 2px solid white; border-radius: 20px; padding: 7px; width: 120px; display: flex; justify-content: center;">Samples Per Load: ${this.samplesLoaded}</p>
+          <p>Samples Per Load: ${this.samplesLoaded}</p>
           <input
             type="range"
             id="slider"
@@ -332,17 +383,18 @@ export class ChallengeTable extends LitElement {
           </input>
         </div>
       </div>
-      <div id="table-and-graph">
-        
-        <div id="dot-graph">
+      <div class="table-and-graph">
+        <div class="graph-container">
           <challenge-chart .data=${this.data}></challenge-chart>
         </div>
-        <div id="table">
+        <div class="table">
         <table>
           <thead>
-            <tr>
-              <th>${this.columnNames[0]}</th>
-              <th>${this.columnNames[1]}</th>
+            <tr>${map(
+              this.columnNames,
+              (item) => html`
+                <th>${item}</th>
+              `)}
             </tr>
           </thead>
           <tbody>
@@ -358,10 +410,6 @@ export class ChallengeTable extends LitElement {
         </table>
       </div>
     </div>
-
-     
-  
-    
     `;
   }
 }

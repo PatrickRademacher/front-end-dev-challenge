@@ -21,9 +21,6 @@ describe('ChallengeTable', () => {
     
         expect(ct.active).to.equal(true);
       });
-
-      
-
       
       });
 

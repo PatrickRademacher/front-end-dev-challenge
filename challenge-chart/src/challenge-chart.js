@@ -11,7 +11,7 @@ import {
 
 export class ChallengeChart extends LitElement {
   static get styles() {
-    return css``;
+    return css;
   }
 
   static get properties() {
