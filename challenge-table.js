@@ -177,7 +177,7 @@ export class ChallengeTable extends LitElement {
 
       .disabled {
         pointer-events: none;
-        opacity: 0.5; /* You can adjust the opacity or add other styles for the disabled look */
+        opacity: 0.5;
       }
       challenge-chart{
         width: 95%;
@@ -294,7 +294,9 @@ export class ChallengeTable extends LitElement {
       dynamicButton: { type: String },
       active: { type: Boolean},
       samplesPerSecond: { type: Number },
-      samplesLoaded: { type: Number }
+      samplesLoaded: { type: Number },
+      dataSets: {type: Array },
+      dataSetNames: { type: Array }
     };
   }
 
