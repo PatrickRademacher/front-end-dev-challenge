@@ -3,7 +3,6 @@ import {map} from 'lit/directives/map.js';
 import './challenge-chart/dist/challenge-chart';
 import { ChallengeDataService } from './ChallengeDataService';
 
-
 export class ChallengeTable extends LitElement {
   static get styles() {
     return css`
@@ -305,7 +304,7 @@ export class ChallengeTable extends LitElement {
     this.name = 'Default';
     this.data = [];
     this.columnNames = ['x', 'y'];
-    this.challengeDataService = new ChallengeDataService;
+    this.challengeDataService = new ChallengeDataService();
     this.active = false; // boolean to determine if dynamic data is streaming
     this.dynamicButton = "Get Dynamic Data";
     this.samplesPerSecond = 1; // allows user to set rate for dynamic data
@@ -320,7 +319,7 @@ export class ChallengeTable extends LitElement {
       this.name = success.name;
       this.columnNames = [success.xColumn._name, success.yColumn._name];
       this.data = success.xColumn._values.map((x, i) => ({x: x, y: success.yColumn._values[i]})); 
-    }).catch(error => console.log('ERROR: ' + error));
+    }).catch(error => console.log('ERROR: \n' + error));
   } 
   
 
@@ -336,7 +335,6 @@ export class ChallengeTable extends LitElement {
         dynamicData = dynamicData.concat([{x: x, y: y}]) 
         // sets data to be updated after how many samples loaded
         dynamicData.length % this.samplesLoaded === 0 ? this.data = dynamicData : null;
-        
       });
     }
     else{
